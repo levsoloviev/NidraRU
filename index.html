@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Йога-нидра</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #0d0d0d;
+    color: #e8dfc8;
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 3rem 1.5rem 4rem;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  .container {
+    max-width: 560px;
+    width: 100%;
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  .symbol {
+    font-size: 3rem;
+    color: #c9a84c;
+    opacity: 0.85;
+    line-height: 1;
+    margin-bottom: 1.5rem;
+  }
+
+  h1 {
+    font-size: 2.2rem;
+    font-weight: 300;
+    letter-spacing: 0.14em;
+    color: #e8dfc8;
+    margin-bottom: 0.4rem;
+  }
+
+  .subtitle {
+    font-size: 0.95rem;
+    font-style: italic;
+    color: #6a6050;
+    letter-spacing: 0.08em;
+  }
+
+  .divider {
+    width: 40px;
+    height: 1px;
+    background: #c9a84c;
+    opacity: 0.35;
+    margin: 1.5rem auto 0;
+  }
+
+  /* Track list */
+  .tracks {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+
+  .track {
+    background: #111;
+    border: 1px solid #1e1c18;
+    border-radius: 3px;
+    padding: 1.1rem 1.25rem;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .track:hover {
+    border-color: #2e2820;
+    background: #141210;
+  }
+
+  .track.active {
+    border-color: #c9a84c;
+    background: #141210;
+  }
+
+  .track-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .track-num {
+    font-size: 0.75rem;
+    color: #3a3428;
+    letter-spacing: 0.1em;
+    width: 1.5rem;
+    flex-shrink: 0;
+    text-align: right;
+  }
+
+  .track.active .track-num {
+    color: #c9a84c;
+  }
+
+  .track-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1px solid #2a2520;
+    background: transparent;
+    color: #6a6050;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: border-color 0.2s, color 0.2s, background 0.2s;
+  }
+
+  .track.active .track-btn {
+    border-color: #c9a84c;
+    color: #c9a84c;
+  }
+
+  .track-btn:hover {
+    border-color: #c9a84c;
+    color: #c9a84c;
+  }
+
+  .track-btn svg {
+    width: 14px;
+    height: 14px;
+    pointer-events: none;
+  }
+
+  .track-title {
+    flex: 1;
+    font-size: 1rem;
+    font-weight: 300;
+    letter-spacing: 0.06em;
+    color: #b0a48a;
+    line-height: 1.3;
+  }
+
+  .track.active .track-title {
+    color: #e8dfc8;
+  }
+
+  .track-duration {
+    font-size: 0.72rem;
+    color: #3a3428;
+    letter-spacing: 0.08em;
+    flex-shrink: 0;
+  }
+
+  /* Progress bar — only shown on active track */
+  .track-progress {
+    display: none;
+    align-items: center;
+    gap: 0.75rem;
+    padding-left: calc(1.5rem + 36px + 1rem);
+  }
+
+  .track.active .track-progress {
+    display: flex;
+  }
+
+  .progress-wrap {
+    flex: 1;
+    height: 2px;
+    background: #2a2520;
+    border-radius: 1px;
+    cursor: pointer;
+    position: relative;
+  }
+
+  .progress-bar {
+    height: 100%;
+    background: #c9a84c;
+    border-radius: 1px;
+    width: 0%;
+    pointer-events: none;
+    transition: width 0.1s linear;
+  }
+
+  .progress-time {
+    font-size: 0.7rem;
+    color: #4a4438;
+    letter-spacing: 0.08em;
+    white-space: nowrap;
+    min-width: 70px;
+    text-align: right;
+  }
+
+  audio { display: none !important; }
+
+  .note {
+    text-align: center;
+    margin-top: 2.5rem;
+    font-size: 0.78rem;
+    font-style: italic;
+    color: #2e2c28;
+    letter-spacing: 0.06em;
+  }
+</style>
+</head>
+<body oncontextmenu="return false">
+
+<div class="container">
+  <header>
+    <div class="symbol">॰</div>
+    <h1>Йога-нидра</h1>
+    <p class="subtitle">практики глубокого расслабления</p>
+    <div class="divider"></div>
+  </header>
+
+  <div class="tracks" id="trackList"></div>
+  <p class="note">Записи защищены от скачивания.</p>
+</div>
+
+<audio id="audioEl" preload="metadata"></audio>
+
+<script>
+(function() {
+  const TRACKS = [
+    { file: '01_nachinayuschiy.mp3',   title: 'НАЧИНАЮЩИЙ УРОВЕНЬ' },
+    { file: '02_beloe_stroenie.mp3',   title: 'БЕЛОЕ СТРОЕНИЕ' },
+    { file: '03_voskhozhdenie.mp3',    title: 'ВОСХОЖДЕНИЕ' },
+    { file: '04_zhiznennaya_sila.mp3', title: 'ЖИЗНЕННАЯ СИЛА' },
+    { file: '05_lyubov.mp3',           title: 'ЛЮБОВЬ' },
+    { file: '06_pogruzhenie.mp3',      title: 'ПОГРУЖЕНИЕ' },
+    { file: '07_polet.mp3',            title: 'ПОЛЕТ' },
+    { file: '08_plodovoe_derevo.mp3',  title: 'ПЛОДОВОЕ ДЕРЕВО' },
+    { file: '09_kolodets.mp3',         title: 'КОЛОДЕЦ' },
+    { file: '10_vershina.mp3',         title: 'ВЕРШИНА' },
+  ];
+
+  const audio = document.getElementById('audioEl');
+  const list  = document.getElementById('trackList');
+  let currentIdx = null;
+
+  const svgPlay  = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>`;
+  const svgPause = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>`;
+
+  function fmt(s) {
+    if (!s || isNaN(s)) return '0:00';
+    const m = Math.floor(s / 60);
+    const sec = Math.floor(s % 60);
+    return m + ':' + (sec < 10 ? '0' : '') + sec;
+  }
+
+  // Build DOM
+  TRACKS.forEach((t, i) => {
+    const el = document.createElement('div');
+    el.className = 'track';
+    el.dataset.idx = i;
+    el.innerHTML = `
+      <div class="track-header">
+        <span class="track-num">${String(i+1).padStart(2,'0')}</span>
+        <button class="track-btn" data-idx="${i}">${svgPlay}</button>
+        <span class="track-title">Йога-нидра&thinsp;·&thinsp;${t.title}</span>
+        <span class="track-duration" id="dur${i}">—</span>
+      </div>
+      <div class="track-progress">
+        <div class="progress-wrap" id="pw${i}">
+          <div class="progress-bar" id="pb${i}"></div>
+        </div>
+        <span class="progress-time" id="pt${i}">0:00 / 0:00</span>
+      </div>`;
+    list.appendChild(el);
+
+    // Preload duration
+    const tmp = new Audio();
+    tmp.preload = 'metadata';
+    tmp.src = t.file;
+    tmp.addEventListener('loadedmetadata', () => {
+      document.getElementById('dur' + i).textContent = fmt(tmp.duration);
+    });
+  });
+
+  function setActive(idx) {
+    document.querySelectorAll('.track').forEach((el, i) => {
+      el.classList.toggle('active', i === idx);
+      el.querySelector('.track-btn').innerHTML = (i === idx && !audio.paused) ? svgPause : svgPlay;
+    });
+  }
+
+  function loadAndPlay(idx) {
+    currentIdx = idx;
+    audio.src = TRACKS[idx].file;
+    audio.play();
+    setActive(idx);
+  }
+
+  // Click on track or button
+  list.addEventListener('click', e => {
+    const btn = e.target.closest('.track-btn');
+    const track = e.target.closest('.track');
+    if (!track) return;
+    const idx = parseInt(track.dataset.idx);
+
+    if (idx === currentIdx) {
+      // toggle play/pause
+      if (audio.paused) { audio.play(); } else { audio.pause(); }
+      setActive(idx);
+    } else {
+      loadAndPlay(idx);
+    }
+  });
+
+  // Progress clicks
+  list.addEventListener('click', e => {
+    const pw = e.target.closest('.progress-wrap');
+    if (!pw || currentIdx === null || !audio.duration) return;
+    const rect = pw.getBoundingClientRect();
+    audio.currentTime = ((e.clientX - rect.left) / rect.width) * audio.duration;
+  });
+
+  audio.addEventListener('timeupdate', () => {
+    if (currentIdx === null) return;
+    const pct = audio.duration ? (audio.currentTime / audio.duration) * 100 : 0;
+    const pb = document.getElementById('pb' + currentIdx);
+    const pt = document.getElementById('pt' + currentIdx);
+    if (pb) pb.style.width = pct + '%';
+    if (pt) pt.textContent = fmt(audio.currentTime) + ' / ' + fmt(audio.duration);
+  });
+
+  audio.addEventListener('ended', () => {
+    // Auto-advance
+    if (currentIdx !== null && currentIdx < TRACKS.length - 1) {
+      loadAndPlay(currentIdx + 1);
+    } else {
+      setActive(null);
+      currentIdx = null;
+    }
+  });
+
+  // Block save shortcut
+  document.addEventListener('keydown', e => {
+    if ((e.ctrlKey || e.metaKey) && (e.key === 's' || e.key === 'S')) e.preventDefault();
+  });
+  document.addEventListener('dragstart', e => e.preventDefault());
+})();
+</script>
+</body>
+</html>
